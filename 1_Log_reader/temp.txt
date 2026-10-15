@@ -1,0 +1,401 @@
+Based on the following description help me to build the project, i already got a correct LogParser.py: 
+//___Project descriptio
+# 🎯 Project: Spatially-Adapted Behavior Cloning Bot (Log + Vision Hybrid)
+
+## 1. Objective
+
+Build a system that:
+
+1. Reconstructs full game state using:
+
+   * Server logs (identity + stats)
+   * Screen vision (positions on fixed isometric grid)
+2. Learns player behavior via imitation (behavior cloning)
+3. Replays **action sequences from similar past states**
+4. BUT adapts actions spatially when enemy positions differ
+5. Executes actions in real time with controlled timing (≥ 0.01s per action)
+
+---
+
+# 2. Core Design Principle
+
+> The bot reuses past *strategies*, not exact coordinates.
+
+So instead of:
+
+* “Click tile (6,7) because I did before”
+
+It does:
+
+* “Attack the closest equivalent enemy in this new configuration”
+
+---
+
+# 3. System Architecture
+
+```text id="a9k2qp"
+                ┌──────────────┐
+                │ Log Parser   │
+                └──────┬───────┘
+                       ▼
+                ┌──────────────┐
+                │ Entity Store │
+                └──────┬───────┘
+                       │
+        ┌──────────────▼──────────────┐
+        │ Vision Module (tile mapping)│
+        └──────────────┬──────────────┘
+                       ▼
+              ┌──────────────────┐
+              │ State Builder    │
+              └────────┬─────────┘
+                       ▼
+              ┌──────────────────┐
+              │ State Encoder    │
+              └────────┬─────────┘
+                       ▼
+      ┌─────────────────────────────────┐
+      │ Similarity Search (Memory DB)   │
+      └──────────────┬──────────────────┘
+                     ▼
+        ┌──────────────────────────────┐
+        │ Action Sequence Retriever    │
+        └──────────────┬───────────────┘
+                     ▼
+        ┌──────────────────────────────┐
+        │ Spatial Action Adapter       │
+        └──────────────┬───────────────┘
+                     ▼
+              ┌──────────────────┐
+              │ Action Executor  │
+              └──────────────────┘
+```
+
+---
+
+# 4. Core Idea: “Action = Intent + Target Class”
+
+Instead of storing absolute actions, store:
+
+## 4.1 Action representation (IMPORTANT CHANGE)
+
+```python id="t9m2xq"
+class ActionIntent:
+    type: str            # move | spell | combo
+    source_role: str     # "self"
+    target_role: str     # "nearest_enemy" | "lowest_hp_enemy" | "specific_enemy_type"
+    spell_id: str | None
+```
+
+### This is the key upgrade
+
+You are no longer replaying coordinates.
+
+You are replaying **semantic targeting rules**.
+
+---
+
+# 5. MEMORY SYSTEM (UPDATED)
+
+## Stored sample:
+
+```json id="m8k2zp"
+{
+  "state": "encoded_vector",
+  "actions": [
+    {
+      "type": "spell",
+      "spell": "fireball",
+      "target_role": "lowest_hp_enemy"
+    },
+    {
+      "type": "move",
+      "target_role": "safe_position_near_wall"
+    }
+  ]
+}
+```
+
+---
+
+# 6. STATE ENCODING (FOR MATCHING)
+
+Same as before, but critical constraint:
+
+## Must include:
+
+* relative enemy positions
+* enemy density map
+* distance-to-player distribution
+* HP distribution
+
+### Encoding vector:
+
+```text id="c8m2mz"
+[
+  self_x, self_y,
+  self_hp, self_ap, self_mp,
+
+  enemy_dx_1, enemy_dy_1, hp_1,
+  enemy_dx_2, enemy_dy_2, hp_2,
+  ...
+
+  enemy_density_map_hash
+]
+```
+
+---
+
+# 7. SIMILARITY SEARCH
+
+Find closest past state:
+
+```text id="r2k9qp"
+best_match = argmax(similarity(current_state, past_states))
+```
+
+Similarity includes:
+
+* spatial configuration similarity
+* number of enemies
+* HP distribution similarity
+
+---
+
+# 8. SPATIAL ACTION ADAPTER (CORE NEW MODULE)
+
+This is the most important component.
+
+## Purpose:
+
+Convert abstract intent → real current targets
+
+---
+
+## 8.1 Target resolution rules
+
+### Rule 1: role-based matching
+
+| Intent               | Runtime resolution             |
+| -------------------- | ------------------------------ |
+| nearest_enemy        | closest enemy in current state |
+| lowest_hp_enemy      | min HP enemy                   |
+| highest_threat_enemy | heuristic score                |
+| same_type_enemy      | match by log entity type       |
+
+---
+
+## 8.2 Mapping function
+
+```python id="x8m2qp"
+def resolve_target(intent, state):
+    if intent.target_role == "nearest_enemy":
+        return closest_enemy(state)
+
+    if intent.target_role == "lowest_hp_enemy":
+        return min(state.enemies, key=lambda e: e.hp)
+
+    if intent.target_role == "same_type_enemy":
+        return match_by_type_and_distance()
+```
+
+---
+
+## 8.3 Movement adaptation
+
+Instead of replaying:
+
+> “move to tile (5,7)”
+
+You do:
+
+> “move to safe tile near wall away from nearest enemy cluster”
+
+Compute:
+
+* danger map (enemy proximity heatmap)
+* safe tiles (low risk gradient)
+* choose best scoring tile
+
+---
+
+# 9. DECISION FLOW (FINAL)
+
+```text id="l4m2xq"
+1. Capture frame
+2. Parse logs
+3. Vision → entity positions
+4. Build state
+5. Encode state
+6. Find best matching past state
+7. Retrieve action intents
+8. Resolve targets spatially
+9. Execute actions
+```
+
+---
+
+# 10. EXECUTION SYSTEM
+
+Constraint:
+
+* ≥ 0.01s delay per action
+
+Queue system:
+
+```python id="q9k2mz"
+for action in resolved_actions:
+    wait(0.01)
+    execute(action)
+```
+
+---
+
+# 11. LEARNING PIPELINE (IMPROVEMENT LOOP)
+
+## Phase 1: recording
+
+Store:
+
+* state
+* action intents (NOT raw clicks)
+
+## Phase 2: clustering
+
+Group similar fights:
+
+* same enemy count
+* same formation types
+
+## Phase 3: retrieval optimization
+
+Use nearest-neighbor search (FAISS or simple KD-tree)
+
+---
+
+# 12. VISION + LOG ROLE SPLIT
+
+| Source | Responsibility       |
+| ------ | -------------------- |
+| Logs   | identity, HP, AP, MP |
+| Vision | positions            |
+| Memory | behavior patterns    |
+
+---
+
+# 13. FAILURE HANDLING
+
+## Case 1: no good match in memory
+
+→ fallback heuristic controller
+
+## Case 2: enemy reposition too different
+
+→ re-evaluate target roles only
+
+## Case 3: occlusion
+
+→ rely on logs + last known positions
+
+---
+
+# 14. PROJECT STRUCTURE
+
+```text id="b7m2kp"
+bot/
+  core/
+    state.py
+    entity.py
+
+  logs/
+    parser.py
+
+  vision/
+    capture.py
+    detector.py
+
+  state/
+    builder.py
+    encoder.py
+
+  memory/
+    store.py
+    similarity.py
+
+  policy/
+    intent_model.py
+
+  adapter/
+    spatial_resolver.py
+
+  execution/
+    controller.py
+```
+
+---
+
+# 15. IMPLEMENTATION CHECKPOINTS
+
+## Phase 1 — State foundation
+
+* [ ] logs → entities stable
+* [ ] vision → tile positions stable
+
+## Phase 2 — Memory system
+
+* [ ] state encoding works
+* [ ] similarity search returns valid matches
+
+## Phase 3 — action intents
+
+* [ ] actions stored as roles (not coordinates)
+
+## Phase 4 — spatial adaptation
+
+* [ ] target resolution works dynamically
+
+## Phase 5 — full loop
+
+* [ ] replay adapts correctly in different enemy layouts
+
+---
+
+# 16. FINAL SYSTEM DEFINITION
+
+This bot is:
+
+> A memory-based imitation system that retrieves past strategies and dynamically rebinds them to current spatial configurations using role-based target resolution.
+
+//____LogParser.py
+# -----------------------------
+# PARSER → EVENT MAPPER
+# -----------------------------
+class FightLogParser:
+    FL_REGEX = re.compile(
+        r"\[_FL_\]\s+fightId=(\d+)\s+"
+        r"(.*?)\s+breed\s+:\s+(\d+)\s+\[([-\d]+)\]\s+"
+        r"isControlledByAI=(true|false)\s+obstacleId\s+:\s+([-\d]+)\s+"
+        r"join the fight at\s+\{Point3\s+:\s+\(([-\d]+),\s+([-\d]+),\s+([-\d]+)\)\}"
+    )
+
+    @staticmethod
+    def parse(line: str) -> Optional[EntitySpawned]:
+        if "[_FL_]" not in line:
+            return None
+
+        m = FightLogParser.FL_REGEX.search(line)
+        if not m:
+            return None
+
+        fight_id, name, breed, entity_id, is_ai, obstacle_id, x, y, z = m.groups()
+
+        return EntitySpawned(
+            fight_id=fight_id,
+            entity_id=entity_id,
+            name=name.strip(),
+            breed=int(breed),
+            is_ai=(is_ai == "true"),
+            obstacle_id=int(obstacle_id),
+            position={"x": int(x), "y": int(y), "z": int(z)},
+        )
+

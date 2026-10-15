@@ -1,0 +1,54 @@
+.
+├── 0_clicker_no_brain
+│   ├── 0_catch_data.py
+│   ├── 1_tree_Generator.py
+│   ├── 2_bot.py
+│   ├── 3_adapt_filenames.py
+│   ├── README
+│   ├── __pycache__
+│   ├── action.txt
+│   ├── bash.sh
+│   ├── img
+│   ├── requirements.txt
+│   ├── save_logs.txt
+│   ├── src.py
+│   ├── steps_Bilbiza
+│   └── steps_Trool
+├── 1_Log_reader
+│   ├── __pycache__
+│   ├── bash.sh
+│   ├── data_test
+│   ├── requirements.txt
+│   ├── src
+│   └── temp.txt
+├── Mes LOOTS
+│   ├── CaFaitsaitLongtempsMonCaillou.png
+│   ├── HEHEHEHE_2JOURS_2PIERRES.png
+│   ├── HEHEHE_3_Abandon.png
+│   ├── HEHE_une_pierre_vite_fait.png
+│   ├── HEHE_une_pierre_vite_fait_2.png
+│   ├── Hehe_ça_mange_bien.png
+│   ├── Sram_Breche_Phase_1.png
+│   ├── TURIPU_Bagus.png
+│   ├── XDDDDDDD_CaFaitsaitLongtempsMonCailloMAIS NAAAAAN.png
+│   └── XDDDDD_KEUWAAAA.png
+├── README.md
+├── script.sh
+├── temp.txt
+└── yolo-opencv-detector
+    ├── 1_generate_dataset.ipynb
+    ├── 2_label_dataset.ipynb
+    ├── 3_yolo_model_training.ipynb
+    ├── 4_yolo_opencv_detector.ipynb
+    ├── 5_automate_actions.ipynb
+    ├── README.md
+    ├── __init__.py
+    ├── images
+    ├── obj
+    ├── requirements.txt
+    ├── shuffled_images
+    ├── vision
+    ├── yolov4-tiny
+    └── yolov4-tiny-custom_last.weights
+
+17 directories, 35 files
