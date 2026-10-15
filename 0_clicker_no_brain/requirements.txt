@@ -1,0 +1,4 @@
+pyautogui
+regex
+PyGetWindow
+DateTime

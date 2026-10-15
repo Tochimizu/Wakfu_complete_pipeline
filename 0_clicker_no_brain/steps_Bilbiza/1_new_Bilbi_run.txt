@@ -1,0 +1,98 @@
+0000_rightClick_1047_455_1.7.png
+0001_leftClick_1048_423_1.5.png
+0002_leftClick_963_724_2.26.png
+0003_leftClick_1731_281_2.5.png
+0004_rightClick_1458_122_7.2.png
+0005_leftClick_1458_81_1.49.png
+0006_space_1315_303_2.69.png
+0007_leftClick_985_558_1.86.png
+0008_ctrl 1_813_482_2.32.png
+0009_leftClick_813_482_0.65.png
+0010_ctrl 2_977_563_2.21.png
+0011_leftClick_977_563_0.16.png
+0012_shift 2_977_563_0.55.png
+0013_leftClick_977_563_0.21.png
+0014_shift 3_812_482_0.69.png
+0015_leftClick_812_482_0.29.png
+0016_leftClick_765_403_0.85.png
+0017_ctrl 3_808_496_2.37.png
+0018_leftClick_808_496_0.49.png
+0019_3_975_302_1.41.png
+0020_leftClick_975_302_0.0.png
+0021_3_1308_470_1.37.png
+0022_leftClick_1308_470_0.0.png
+0023_shift 5_1519_469_1.15.png
+0024_leftClick_1518_466_0.23.png
+0025_shift 5_1243_333_1.07.png
+0026_leftClick_1243_333_0.26.png
+0027_1_971_198_1.47.png
+0028_leftClick_971_198_0.0.png
+0029_space_971_198_1.19.png
+0030_leftClick_1406_388_7.73.png
+0031_leftClick_1074_426_1.35.png
+0032_rightClick_1623_158_2.74.png
+0033_leftClick_1623_121_1.37.png
+0034_space_1158_432_2.37.png
+0035_ctrl 1_1027_499_1.32.png
+0036_leftClick_1023_495_0.49.png
+0037_ctrl 2_850_574_3.27.png
+0038_leftClick_850_574_0.3.png
+0039_shift 2_850_574_0.42.png
+0040_leftClick_850_574_0.16.png
+0041_shift 3_1008_493_0.67.png
+0042_leftClick_1009_493_0.16.png
+0043_leftClick_1188_466_0.78.png
+0044_ctrl 3_1188_466_2.48.png
+0045_leftClick_1121_467_1.69.png
+0046_3_902_313_2.43.png
+0047_leftClick_901_313_0.22.png
+0048_3_1139_307_1.08.png
+0049_leftClick_1139_307_0.0.png
+0050_1_1574_524_1.23.png
+0051_leftClick_1574_524_0.0.png
+0052_5_1348_527_1.22.png
+0053_leftClick_1348_527_0.0.png
+0054_shift 5_1057_788_1.42.png
+0055_leftClick_1024_795_0.49.png
+0056_shift 5_645_604_1.36.png
+0057_leftClick_588_584_0.67.png
+0058_4_594_473_1.35.png
+0059_leftClick_594_472_0.12.png
+0060_4_1027_686_1.46.png
+0061_leftClick_1027_686_0.07.png
+0062_space_1027_686_0.97.png
+0063_leftClick_1406_385_9.9.png
+0064_rightClick_1399_207_1.76.png
+0065_leftClick_1399_170_1.27.png
+0066_space_1399_170_2.86.png
+0067_leftClick_1078_481_2.04.png
+0068_ctrl 1_916_568_1.67.png
+0069_leftClick_916_568_0.49.png
+0070_ctrl 2_1082_481_1.73.png
+0071_leftClick_1082_481_0.16.png
+0072_shift 2_1082_481_0.58.png
+0073_leftClick_1082_481_0.15.png
+0074_shift 3_921_564_0.71.png
+0075_leftClick_923_566_0.23.png
+0076_leftClick_749_595_0.99.png
+0077_ctrl 3_854_536_2.47.png
+0078_leftClick_855_536_0.6.png
+0079_shift 4_968_593_1.0.png
+0080_leftClick_967_593_0.36.png
+0081_shift 4_740_592_0.74.png
+0082_leftClick_740_592_0.11.png
+0083_shift 4_963_480_1.04.png
+0084_leftClick_964_477_0.2.png
+0085_3_1172_595_1.41.png
+0086_leftClick_1172_595_0.01.png
+0087_3_963_700_1.12.png
+0088_leftClick_963_700_0.0.png
+0089_4_902_835_0.96.png
+0090_leftClick_902_835_0.0.png
+0091_4_731_703_1.11.png
+0092_leftClick_731_703_0.0.png
+0093_4_472_617_1.04.png
+0094_leftClick_472_617_0.0.png
+0095_space_472_617_0.89.png
+0096_leftClick_1404_369_10.59.png
+0097_leftClick_255_842_2.2.png
